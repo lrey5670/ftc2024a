@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotConstants.RC_Shoulder;
 import org.firstinspires.ftc.teamcode.RobotConstants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RobotConstants.TelemetryData;
 import org.firstinspires.ftc.teamcode.Subsystems.Shoulder;
+import org.firstinspires.ftc.teamcode.Subsystems.ShoulderJV;
 
 @TeleOp(name = "SubSystem_Test")
 public class SubSystem_Test extends LinearOpMode {
@@ -20,8 +21,7 @@ public class SubSystem_Test extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = dashboard.getTelemetry();
 
-
-        Shoulder shoulder = new Shoulder(
+        ShoulderJV shoulderJV = new ShoulderJV(
                 hardwareMap.get(DcMotorEx.class, "shoulder"),
                 hardwareMap.get(TouchSensor.class, "shoulderSensor"),
                 true);
@@ -36,12 +36,15 @@ public class SubSystem_Test extends LinearOpMode {
             left_x = zeroAnalogInput(gamepad1.left_stick_x);
             right_x = zeroAnalogInput(gamepad1.right_stick_x);
 
-            shoulder.update();
+            shoulderJV.moveMotor(left_y);
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);
-            telemetry.addData("shoulder target", TelemetryData.shoulder_target);
-            telemetry.addData("shoulder power", TelemetryData.shoulder_power);
-            telemetry.addData("shoulder velocity", TelemetryData.shoulder_velocity);
-            telemetry.update();
+
+            //shoulder.update();
+            //telemetry.addData("shoulder position", TelemetryData.shoulder_position);
+            //telemetry.addData("shoulder target", TelemetryData.shoulder_target);
+            //telemetry.addData("shoulder power", TelemetryData.shoulder_power);
+            //telemetry.addData("shoulder velocity", TelemetryData.shoulder_velocity);
+            //telemetry.update();
 
         }
     }

@@ -29,12 +29,14 @@ public class SubSystem_Test extends LinearOpMode {
         double right_y = gamepad1.right_stick_y;
         double left_x = gamepad1.left_stick_x;
         double right_x = gamepad1.right_stick_x;
+        boolean triangle = gamepad1.triangle;
         waitForStart();
         while(opModeIsActive()) {
             left_y = zeroAnalogInput(gamepad1.left_stick_y);
             right_y = zeroAnalogInput(gamepad1.right_stick_y);
             left_x = zeroAnalogInput(gamepad1.left_stick_x);
             right_x = zeroAnalogInput(gamepad1.right_stick_x);
+
 
             shoulderJV.moveMotor(left_y);
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);

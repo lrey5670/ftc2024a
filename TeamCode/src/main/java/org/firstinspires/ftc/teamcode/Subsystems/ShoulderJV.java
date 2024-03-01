@@ -51,4 +51,6 @@ public class ShoulderJV {
 
         TelemetryData.shoulder_position = this.motor.getCurrentPosition();
     }
+
+    // auto
 }

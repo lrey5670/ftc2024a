@@ -26,13 +26,29 @@ public class ShoulderJV {
         this.touch = t;
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.motor.setDirection(DcMotorEx.Direction.REVERSE);
         this.controller = new PIDController(RC_Shoulder.kP, RC_Shoulder.kI, RC_Shoulder.kD);
         this.motor.setPower(0);
     }
 
     public void moveMotor(double input) {
-        this.motor.setPower(input);
+        if (!this.resetTriggered && this.touch.isPressed()) {
+            TelemetryData.shoulder_position = 0;
+            this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.resetTriggered = true;
+        } else if (!this.touch.isPressed()){
+            this.resetTriggered = false;
+        }
+
+        if (this.touch.isPressed() && input < 0) {
+            this.motor.setPower(0);
+        } else if (TelemetryData.shoulder_position > 3000 && input > 0) {
+            this.motor.setPower(0);
+        }
+        else {
+            this.motor.setPower(input);
+        }
+
         TelemetryData.shoulder_position = this.motor.getCurrentPosition();
     }
 }

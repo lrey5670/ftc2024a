@@ -22,8 +22,8 @@ public class SubSystem_Test extends LinearOpMode {
         telemetry = dashboard.getTelemetry();
 
         ShoulderJV shoulderJV = new ShoulderJV(
-                hardwareMap.get(DcMotorEx.class, "shoulder"),
-                hardwareMap.get(TouchSensor.class, "shoulderSensor"),
+                hardwareMap.get(DcMotorEx.class, "armRot"),
+                hardwareMap.get(TouchSensor.class, "armLimit"),
                 true);
         double left_y = gamepad1.left_stick_y;
         double right_y = gamepad1.right_stick_y;
@@ -39,13 +39,13 @@ public class SubSystem_Test extends LinearOpMode {
             shoulderJV.moveMotor(left_y);
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);
 
+
             //shoulder.update();
             //telemetry.addData("shoulder position", TelemetryData.shoulder_position);
             //telemetry.addData("shoulder target", TelemetryData.shoulder_target);
             //telemetry.addData("shoulder power", TelemetryData.shoulder_power);
             //telemetry.addData("shoulder velocity", TelemetryData.shoulder_velocity);
-            //telemetry.update();
-
+            telemetry.update();
         }
     }
 

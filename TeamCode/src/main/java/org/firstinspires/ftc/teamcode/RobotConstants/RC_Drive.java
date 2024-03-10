@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class RC_Drive {
+
     public static final float yawMax = 5;
     public static final float yawCheck = 2.5F;
     public static final double MULTIPLIER = 1;

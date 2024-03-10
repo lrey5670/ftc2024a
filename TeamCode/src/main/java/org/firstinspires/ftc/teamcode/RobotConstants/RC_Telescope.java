@@ -11,7 +11,8 @@ public class RC_Telescope {
     public static int maxVel = 10000;
     public static int maxAccel = 10000;
     public static int maxJerk = 2000;
-    public static int stowPos = -500;
-    public static int pickupPos = -1000;
-    public static int dropOffHigh = -3700;
+    public static int stowPos = 0;
+    public static int pickupPos = 1200;
+    public static int dropOffPos = 1321;
+    public static double speedMulti = 1.5;
 }

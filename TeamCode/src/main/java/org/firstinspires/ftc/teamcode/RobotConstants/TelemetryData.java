@@ -14,4 +14,10 @@ public class TelemetryData {
     public static double clawTop_position = 0.5;
     public static double clawBottom_position = 0.5;
     public static double whatHeadingDo;
+
+    public static int xTarget;
+    public static int yTarget;
+    public static double xPower;
+    public static double yPower;
+
 }

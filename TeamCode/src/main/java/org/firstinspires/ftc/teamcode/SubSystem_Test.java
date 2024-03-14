@@ -127,13 +127,17 @@ public class SubSystem_Test extends LinearOpMode {
                 driveTrain.drive(left_x, -left_y, right_x, false);
             }
 
-
+            double curX = driveTrain.getXDistance();
+            double curY = driveTrain.getYDistance();
+            telemetry.addData("XPOS", curX);
+            telemetry.addData("YPOS", curY);
 
             telemetry.addData("wrist position", TelemetryData.wrist_position);
             telemetry.addData("telescope position", TelemetryData.telescope_position);
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);
             telemetry.addData("clawTop position", TelemetryData.clawTop_position);
             telemetry.addData("clawBottom position", TelemetryData.clawBottom_position);
+
 
             //shoulderJV.update();
             //telemetry.addData("shoulder position", TelemetryData.shoulder_position);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -17,6 +18,9 @@ public class DriveTrain {
     private IMU imu;
     private double headingToMaintain;
 
+    PIDController x_controller;
+    PIDController y_controller;
+
     public DriveTrain(DcMotorEx fL, DcMotorEx fR, DcMotorEx bL, DcMotorEx bR, IMU i, boolean fromAuto) {
         this.frontLeft = fL;
         this.frontRight = fR;
@@ -32,6 +36,17 @@ public class DriveTrain {
         this.backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         this.frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         this.backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        if (fromAuto) {
+            this.x_controller = new PIDController(RC_Drive.x_kP, RC_Drive.x_kI, RC_Drive.x_kD);
+            this.y_controller = new PIDController(RC_Drive.y_kP, RC_Drive.y_kI, RC_Drive.y_kD);
+            this.frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            this.frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        } else {
+//            setHeadingToMaintain(Math.toRadians(RC_Drive.yaw_from_auto));
+        }
+
+
         this.backLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         this.backRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         this.frontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -167,5 +182,60 @@ public class DriveTrain {
         }else{
             return rx;
         }
+    }
+
+
+    private int convertToMM(int input){
+        return (int) (input*0.15073/2);
+    }
+
+    public void setTarget(int mmX, int mmY){
+        TelemetryData.xTarget = mmX;
+        TelemetryData.yTarget = mmY;
+    }
+
+    public int getXDistance(){
+        return convertToMM(this.frontLeft.getCurrentPosition());
+    }
+
+    public int getYDistance(){
+        return convertToMM(this.frontRight.getCurrentPosition());
+    }
+
+    public boolean update(int xTol, int yTol, double xMax, double yMax){
+        this.x_controller.setPID(RC_Drive.x_kP, RC_Drive.x_kI, RC_Drive.x_kD);
+        this.y_controller.setPID(RC_Drive.y_kP, RC_Drive.y_kI, RC_Drive.y_kD);
+        double x_power = limiter(calcXPower(),xMax) * 1.3;
+        double y_power = limiter(calcYPower(),yMax)  * 1.3;
+        TelemetryData.xPower = x_power;
+        TelemetryData.yPower = y_power;
+        drive(-y_power, x_power, 0, true);
+        return Math.abs(x_power) < .1 && Math.abs(y_power) < .1;
+    }
+
+    private double limiter(double input, double lim) {
+        //this will limit the pid to a range of -1 to 1
+        if (input > lim) {
+            input = lim;
+        } else if (input < -lim) {
+            input = -lim;
+        }
+        return input;
+    }
+    private double calcXPower() {
+        double power = 0;
+        double pid = this.x_controller.calculate(getXDistance(), TelemetryData.xTarget);
+
+        pid = limiter(pid / 10, 1);
+        return pid;
+
+    }
+
+    private double calcYPower() {
+        double power = 0;
+        double pid = this.y_controller.calculate(getYDistance(), TelemetryData.yTarget);
+        pid = limiter(pid / 10, 1);
+        return pid;
+
     }
 }

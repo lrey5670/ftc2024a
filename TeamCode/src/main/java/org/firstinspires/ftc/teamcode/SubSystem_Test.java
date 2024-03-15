@@ -72,6 +72,8 @@ public class SubSystem_Test extends LinearOpMode {
 
         GamepadEx myGamePad = new GamepadEx(gamepad1);
 
+        driveTrain.setHeadingToMaintain(0);
+
         double left_y = gamepad1.left_stick_y;
         double right_y = gamepad1.right_stick_y;
         double left_x = gamepad1.left_stick_x;
@@ -133,6 +135,7 @@ public class SubSystem_Test extends LinearOpMode {
             telemetry.addData("YPOS", curY);
 
             telemetry.addData("wrist position", TelemetryData.wrist_position);
+            telemetry.addData("telescope target", TelemetryData.telescope_target);
             telemetry.addData("telescope position", TelemetryData.telescope_position);
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);
             telemetry.addData("clawTop position", TelemetryData.clawTop_position);

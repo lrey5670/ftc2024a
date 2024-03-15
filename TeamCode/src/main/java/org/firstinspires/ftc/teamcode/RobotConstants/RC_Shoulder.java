@@ -11,7 +11,7 @@ public class RC_Shoulder {
     public static int maxVel = 400;
     //public static int maxAccel = 2500;
     //public static int maxJerk = 1200;
-    public static int dropOffPos = 1902;
+    public static int dropOffPos = 1740;
     public static int stowPos = 0;
     public static int pickupPos = 0;
     public static int stackAttack = -110;

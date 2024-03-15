@@ -22,11 +22,13 @@ public class ArmJV {
 
     public void moveStow() throws InterruptedException {
         if (state == 1) {
+            state = 0;
             claw.setPositionBottom(RC_Claw.openBottom);
             Thread.sleep(500);
             claw.setPositionTop(RC_Claw.openTop);
             Thread.sleep(500);
         } else if (state == -1) {
+            state = 0;
             claw.setPositionTop(RC_Claw.closeTop);
             claw.setPositionBottom(RC_Claw.closeBottom);
             Thread.sleep(500);
@@ -61,5 +63,12 @@ public class ArmJV {
             telescope.setTarget(RC_Telescope.dropOffPos);
             wrist.setPosition(RC_Wrist.dropOffPos);
         }
+    }
+
+    public void dropOne() {
+        shoulder.setTarget(RC_Shoulder.pickupPos);
+        telescope.setTarget(RC_Telescope.pickupPos);
+        wrist.setPosition(RC_Wrist.pickupPos);
+        claw.setPositionBottom(RC_Claw.openBottom);
     }
 }

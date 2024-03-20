@@ -129,10 +129,10 @@ public class DriveTrain {
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
 
-        frontLeft.setPower(frontLeftPower);
-        backLeft.setPower(backLeftPower);
-        frontRight.setPower(frontRightPower);
-        backRight.setPower(backRightPower);
+        frontLeft.setPower(frontLeftPower * .5);
+        backLeft.setPower(backLeftPower * .5);
+        frontRight.setPower(frontRightPower * .5);
+        backRight.setPower(backRightPower * .5);
     }
 
     public void setHeadingToMaintain(double input){ this.headingToMaintain = input; }

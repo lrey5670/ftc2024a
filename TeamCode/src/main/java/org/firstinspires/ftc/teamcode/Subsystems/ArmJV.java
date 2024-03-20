@@ -51,6 +51,20 @@ public class ArmJV {
         }
     }
 
+    public void autoDropFloor(){
+
+        if (state != 1) {
+            state = -1;
+            shoulder.setTarget(RC_Shoulder.pickupPos);
+            telescope.setTarget(RC_Telescope.pickupPos);
+            wrist.setPosition(RC_Wrist.pickupPos);
+//            claw.setPositionTop(RC_Claw.openTop);
+            claw.setPositionBottom(RC_Claw.openBottom);
+        }
+
+
+    }
+
     public void updateAll() {
         shoulder.update();
         telescope.update();

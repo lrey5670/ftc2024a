@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -75,6 +76,7 @@ public class AutoJV extends LinearOpMode {
 
         double castleLocation;
         double autoRunStage = 0;
+        int castlePos = 0;
 
 //        armJV.moveStow();
 
@@ -84,18 +86,11 @@ public class AutoJV extends LinearOpMode {
             double curX = driveTrain.getXDistance();
             double curY = driveTrain.getYDistance();
 //            Detect Where Castle with camera(Write Later)
+
+
+
 //            Left Castle move to
-            if (autoRunStage == 0){
-//                TelemetryData.xTarget = RC_AutoJV.x_left_spike;
-//                TelemetryData.yTarget = RC_AutoJV.y_left_spike;
-
-
-//                driveTrain.drive(driveTrain.calcXPower(),driveTrain.calcYPower(),0, true);
-//                if(!( curX <= RC_AutoJV.x_left_spike) || !( curY <= RC_AutoJV.y_left_spike) ){
-
-
-
-//                }
+            if (autoRunStage == 0 && castlePos == 0){
 
                 if( curX <= RC_AutoJV.x_left_spike) {
                     RC_AutoJV.xPower = 0;
@@ -107,52 +102,196 @@ public class AutoJV extends LinearOpMode {
                     RC_AutoJV.yPower = 0;
                 }
 
+
+
+
+
                 driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
                 driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
 
-                if(curX <= RC_AutoJV.x_left_spike && curY <= RC_AutoJV.y_left_spike){
-//                    RC_AutoJV.yPower = 0;
-//                    RC_AutoJV.xPower = 0;
+//                armJV.dropOne();
+
+
+                if(curX <= RC_AutoJV.x_left_spike && curY <= RC_AutoJV.y_left_spike) {
+
+//                    armJV.dropOne();
+//                    armJV.updateAll();
+//                    Thread.sleep(3000);
+//                    telemetry.update();
+
                     autoRunStage = 1;
 //                    Thread.sleep(10000);
                 }
 
 
-//            Turn
-            }else if(autoRunStage == 1){
 
-                if (curY <= -40){
-                    xpower(0);
+                // move back to fit through hole
+            }else if(autoRunStage == 0 && castlePos == 1){
+                if( curX <= RC_AutoJV.x_center_spike) {
+                    RC_AutoJV.xPower = 0;
+//                    autoRunStage = 1;
+//                    Thread.sleep(1000);
+                }
+
+                if ( curY <= RC_AutoJV.y_center_spike){
+                    RC_AutoJV.yPower = 0;
+                }
+
+                driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+                driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
+
+                if(curX <= RC_AutoJV.x_center_spike && curY <= RC_AutoJV.y_center_spike) {
+
+                    autoRunStage = 1;
+//                    Thread.sleep(10000);
+                }
+
+            }
+
+
+            else if(autoRunStage == 1){
+
+                if (curY >= RC_AutoJV.stageOneY ){
+                    ypower(0);
                     autoRunStage = 2;
                 }
                 else{
-                    ypower(-.2);
+                    ypower(-.4);
                 }
-                if(curX <= 0){
+
+//                armJV.moveStow();
+
+                driveTrain.drive(0,RC_AutoJV.yPower,0,true);
+
+
+
+//            ride through hole
+            }else if(autoRunStage == 2){
+
+
+
+                if(curY <= RC_AutoJV.stageTwoYStop){
+                    //turning changes the x to y
                     xpower(0);
+                    autoRunStage = 3;
+
                 }else{
-                    xpower(.2);
+                    xpower(.6);
                 }
-//                driveTrain.drive(0,0,0,true);
-//                driveTrain.drive(0,0.4,0, true);
-//                RC_AutoJV.yPower = 0.4;
-//                RC_AutoJV.xPower = 0.4;
+
+
+
                 driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
-                TelemetryData.whatHeadingDo = (-1.57);
+                TelemetryData.whatHeadingDo = (-1.56);
+                driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
+//                driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+
+//            Go left to match bord
+            }else if(autoRunStage == 3){
+                if(castlePos == 1){
+                    RC_AutoJV.stageThreeXStop = -500;
+                }
+
+
+                if (curX <=  RC_AutoJV.stageThreeXStop){
+                    //goes left
+                    ypower(0);
+//                    autoRunStage = 4;
+
+                }else{
+                    ypower(0.4);
+                }
+
+                if(castlePos == 1){
+                    RC_AutoJV.stageThreeYStop += 200;
+                }
+
+                if(curY <= RC_AutoJV.stageThreeYStop){
+
+                    xpower(0);
+//                    autoRunStage = 3;
+
+                }else{
+                    xpower(.4);
+                }
+
+                if(curX <=  RC_AutoJV.stageThreeXStop && curY <= RC_AutoJV.stageThreeYStop ){
+                    autoRunStage = 4;
+                }
+
+
+                driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+                TelemetryData.whatHeadingDo = (-1.56);
+                driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
+
+//            extend arm, move forward and drop off
+            }else if(autoRunStage == 4){
+                if(castlePos == 1){
+                    RC_AutoJV.stageFourYStop += 25;
+                }
+                    if(curY <= RC_AutoJV.stageFourYStop){
+                        //forward
+                        xpower(0);
+                        autoRunStage = 5;
+
+                    }else{
+                        xpower(.3);
+                    }
+
+
+
+                    driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+                    TelemetryData.whatHeadingDo = (-1.56);
+                    driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
+
+
+
+//            return to corner
+            }else if(autoRunStage == 5){
+                if(castlePos == 1){
+                    RC_AutoJV.stageFiveXStop += -50;
+                }
+
+                if(curX >= RC_AutoJV.stageFiveXStop){
+                    //goes right
+                    ypower(0);
+                    autoRunStage = 6;
+
+                }else{
+                    ypower(-0.4);
+                }
+
+
+
+                driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+                TelemetryData.whatHeadingDo = (-1.56);
                 driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
 
 
+//            move right
+            }else if(autoRunStage == 60){
+                if(curY <= RC_AutoJV.stageSixYStop){
+                    //forward
+                    xpower(0);
+                    autoRunStage = 7;
 
-            }else if(autoRunStage == 2){
-                xpower(.4);
+                }else{
+                    xpower(.2);
+                }
+
+
+
                 driveTrain.drive(RC_AutoJV.xPower ,RC_AutoJV.yPower ,0, true);
+                TelemetryData.whatHeadingDo = (-1.56);
+                driveTrain.setHeadingToMaintain(TelemetryData.whatHeadingDo);
+
+//           move to corner
+            }else if(autoRunStage == 7){
+
             }
 
-//
-//            if (autoRunStage == 1) {
-////
-//
-//            }
+
+
 
 
 //            Middle Castle move to
@@ -166,7 +305,7 @@ public class AutoJV extends LinearOpMode {
 //            Turn to drop
 
 //            Go to corner
-
+//            armJV.updateAll();
             telemetry.addData("XPOS", curX);
             telemetry.addData("YPOS", curY);
             telemetry.addData("autoRunStage", autoRunStage);

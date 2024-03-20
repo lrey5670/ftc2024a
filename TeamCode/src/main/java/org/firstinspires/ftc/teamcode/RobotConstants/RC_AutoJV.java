@@ -36,4 +36,17 @@ public class RC_AutoJV {
 
     public static double xPower = 0;
     public static  double yPower= 0;
+    
+    public static double stageOneX = 50;
+    public static double stageOneY = -145;
+    public static double stageTwoYStop = -1800;
+    public static double stageThreeXStop = -600;
+    public static double stageThreeYStop = -2000;
+    public static double stageFourYStop = -2250;
+    public static double stageFiveXStop = -30;
+    public static double stageSixYStop = -2400;
+    public static double target = -2400;
+
+
+
 }

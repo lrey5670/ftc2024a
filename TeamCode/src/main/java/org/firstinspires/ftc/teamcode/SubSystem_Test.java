@@ -11,12 +11,15 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.RobotConstants.RC_Plane;
 import org.firstinspires.ftc.teamcode.RobotConstants.RC_Shoulder;
 import org.firstinspires.ftc.teamcode.RobotConstants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RobotConstants.TelemetryData;
 import org.firstinspires.ftc.teamcode.Subsystems.ArmJV;
 import org.firstinspires.ftc.teamcode.Subsystems.ClawJV;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.PlaneJV;
 import org.firstinspires.ftc.teamcode.Subsystems.Shoulder;
 import org.firstinspires.ftc.teamcode.Subsystems.ShoulderJV;
 import org.firstinspires.ftc.teamcode.Subsystems.TelescopeJV;
@@ -50,6 +53,8 @@ public class SubSystem_Test extends LinearOpMode {
                 true);
 
         ArmJV armJV = new ArmJV(shoulderJV, telescopeJV, wristJV, clawJV);
+
+        PlaneJV planeJV = new PlaneJV(hardwareMap.get(Servo.class, "airplane"));
 
 
 
@@ -86,6 +91,9 @@ public class SubSystem_Test extends LinearOpMode {
             left_x = zeroAnalogInput(gamepad1.left_stick_x);
             right_x = zeroAnalogInput(gamepad1.right_stick_x);
 
+            if (myGamePad.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
+                shoulderJV.setTarget(2100);
+            }
             if (!myGamePad.isDown(GamepadKeys.Button.LEFT_BUMPER) && myGamePad.wasJustReleased(GamepadKeys.Button.X)) {
                 armJV.moveStow();
             }
@@ -96,7 +104,7 @@ public class SubSystem_Test extends LinearOpMode {
                 armJV.moveDropOff();
             }
             if (!myGamePad.isDown(GamepadKeys.Button.LEFT_BUMPER) && myGamePad.wasJustReleased(GamepadKeys.Button.B)) {
-                driveTrain.testMotors(1000,.5);
+                planeJV.setPosition(RC_Plane.resetPosition);
             }
 
             if (myGamePad.isDown(GamepadKeys.Button.LEFT_BUMPER) && myGamePad.isDown(GamepadKeys.Button.Y)) {
@@ -110,6 +118,9 @@ public class SubSystem_Test extends LinearOpMode {
             }
             if (myGamePad.isDown(GamepadKeys.Button.LEFT_BUMPER) && myGamePad.isDown(GamepadKeys.Button.B)) {
                 driveTrain.setHeadingToMaintain(-1.57);
+            }
+            if (myGamePad.isDown(GamepadKeys.Button.LEFT_BUMPER) && (myGamePad.isDown(GamepadKeys.Button.RIGHT_BUMPER))) {
+                planeJV.setPosition(RC_Plane.launchPosition);
             }
 
             armJV.updateAll();
@@ -140,6 +151,9 @@ public class SubSystem_Test extends LinearOpMode {
             telemetry.addData("shoulder position", TelemetryData.shoulder_position);
             telemetry.addData("clawTop position", TelemetryData.clawTop_position);
             telemetry.addData("clawBottom position", TelemetryData.clawBottom_position);
+            telemetry.addData("IMU", imu.getRobotYawPitchRollAngles());
+            telemetry.addData("IMU2", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
 
 
             //shoulderJV.update();
